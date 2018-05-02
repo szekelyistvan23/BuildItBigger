@@ -23,6 +23,7 @@ android {
         multiDexEnabled true
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        buildConfigField("String", "DEVICE_ID", DEVICE_ID)
     }
 
     buildTypes {
