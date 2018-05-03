@@ -32,6 +32,17 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    flavorDimensions "mode"
+    productFlavors {
+        free {
+            dimension "mode"
+            applicationId "com.udacity.gradle.builditbigger.free"
+        }
+        paid {
+            dimension "mode"
+            applicationId "com.udacity.gradle.builditbigger.paid"
+        }
+    }
 }
 
 dependencies {
