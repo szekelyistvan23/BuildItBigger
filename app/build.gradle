@@ -12,12 +12,6 @@ buildscript {
 
 android {
     signingConfigs {
-        config {
-            storeFile file('/home/morpheus/Documents/free-release.jks')
-            keyAlias 'key0'
-            keyPassword 'freereleasemorpheus'
-            storePassword 'freereleasekey0'
-        }
     }
     compileSdkVersion 26
     buildToolsVersion '27.0.3'
@@ -42,11 +36,11 @@ android {
     productFlavors {
         free {
             dimension "mode"
-            applicationId "com.udacity.gradle.builditbigger.free"
+            applicationId 'com.udacity.gradle.builditbigger.free'
         }
         paid {
             dimension "mode"
-            applicationId "com.udacity.gradle.builditbigger.paid"
+            applicationId 'com.udacity.gradle.builditbigger.paid'
         }
     }
 }
@@ -65,5 +59,5 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     testImplementation 'junit:junit:4.12'
-    implementation project (":jokeprovider",":jokeactivity")
+    //    implementation project (":jokeprovider",":jokeactivity")
 }
