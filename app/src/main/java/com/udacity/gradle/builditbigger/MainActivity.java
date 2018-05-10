@@ -1,15 +1,23 @@
 package com.udacity.gradle.builditbigger;
 
-import android.provider.Settings;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import java.util.UUID;
+import com.google.api.client.extensions.android.http.AndroidHttp;
+import com.google.api.client.extensions.android.json.AndroidJsonFactory;
+import com.google.api.client.googleapis.services.AbstractGoogleClientRequest;
+import com.google.api.client.googleapis.services.GoogleClientRequestInitializer;
+import com.udacity.gradle.builditbigger.backend.myApi.MyApi;
+
+import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
+
+    public static String asyncTaskResult;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,7 +27,42 @@ public class MainActivity extends AppCompatActivity {
 
     public void tellJoke(View view) {
         Toast.makeText(this, "derp", Toast.LENGTH_SHORT).show();
-        JokeLoader jokeLoader = new JokeLoader();
-        jokeLoader.execute();
+        JokeAsyncTask jokeAsyncTask = new JokeAsyncTask();
+        jokeAsyncTask.execute();
+    }
+
+    public static class JokeAsyncTask extends AsyncTask<Void, Void, String> {
+
+        private MyApi myApi;
+
+        @Override
+        protected String doInBackground(Void... voids) {
+            String address = "http://10.0.2.2:8080/_ah/api/";
+            if (myApi == null){
+                MyApi.Builder builder =
+                        new MyApi.Builder(AndroidHttp.newCompatibleTransport(), new AndroidJsonFactory(), null)
+                                .setRootUrl(address)
+                                .setGoogleClientRequestInitializer(new GoogleClientRequestInitializer() {
+                                    @Override
+                                    public void initialize(AbstractGoogleClientRequest<?> request) throws IOException {
+                                        request.setDisableGZipContent(true);
+                                    }
+                                });
+                myApi = builder.build();
+            }
+            try {
+                return myApi.getJoke().execute().getData();
+            } catch (IOException e){
+                return e.getMessage();
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            Log.d("JokeAsyncTask", "onPostExecute: " + s);
+            if ( s != null){
+                asyncTaskResult = s;
+            }
+        }
     }
 }
