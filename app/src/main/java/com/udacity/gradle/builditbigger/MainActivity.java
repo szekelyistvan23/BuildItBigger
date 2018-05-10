@@ -1,5 +1,6 @@
 package com.udacity.gradle.builditbigger;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -7,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.example.jokeactivity.JokeActivity;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.extensions.android.json.AndroidJsonFactory;
 import com.google.api.client.googleapis.services.AbstractGoogleClientRequest;
@@ -17,7 +19,7 @@ import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static String asyncTaskResult;
+    public static final String JOKE_FROM_SERVER = "joke_from_server";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
         jokeAsyncTask.execute();
     }
 
-    public static class JokeAsyncTask extends AsyncTask<Void, Void, String> {
+    public class JokeAsyncTask extends AsyncTask<Void, Void, String> {
 
         private MyApi myApi;
 
@@ -61,7 +63,9 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(String s) {
             Log.d("JokeAsyncTask", "onPostExecute: " + s);
             if ( s != null){
-                asyncTaskResult = s;
+                Intent intent = new Intent(MainActivity.this, JokeActivity.class);
+                intent.putExtra(JOKE_FROM_SERVER, s);
+                startActivity(intent);
             }
         }
     }
