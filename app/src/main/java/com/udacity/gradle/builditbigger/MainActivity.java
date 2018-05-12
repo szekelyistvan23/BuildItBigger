@@ -20,7 +20,9 @@ import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static final String JOKE_FROM_SERVER = "joke_from_server";
+    public static final String JOKE_FROM_SERVER = "joke_from_server" ;
+    public static final String SERVER_ERROR = "Failed to connect to /10.0.2.2:8080";
+    public static final String EMULATOR_LOCALHOST = "http://10.0.2.2:8080/_ah/api/";
     private ProgressBar jokeProgressBar;
 
     @Override
@@ -32,7 +34,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void tellJoke(View view) {
-//        Toast.makeText(this, "derp", Toast.LENGTH_SHORT).show();
         JokeAsyncTask jokeAsyncTask = new JokeAsyncTask();
         jokeAsyncTask.execute();
     }
@@ -49,11 +50,10 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected String doInBackground(Void... voids) {
-            String address = "http://10.0.2.2:8080/_ah/api/";
             if (myApi == null){
                 MyApi.Builder builder =
                         new MyApi.Builder(AndroidHttp.newCompatibleTransport(), new AndroidJsonFactory(), null)
-                                .setRootUrl(address)
+                                .setRootUrl(EMULATOR_LOCALHOST)
                                 .setGoogleClientRequestInitializer(new GoogleClientRequestInitializer() {
                                     @Override
                                     public void initialize(AbstractGoogleClientRequest<?> request) throws IOException {
@@ -71,12 +71,15 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String s) {
-            Log.d("JokeAsyncTask", "onPostExecute: " + s);
-            if ( s != null){
-                jokeProgressBar.setVisibility(View.GONE);
+            jokeProgressBar.setVisibility(View.GONE);
+
+            if ( s != null && !s.equals(SERVER_ERROR)){
                 Intent intent = new Intent(MainActivity.this, JokeActivity.class);
                 intent.putExtra(JOKE_FROM_SERVER, s);
                 startActivity(intent);
+            }
+            if (s.equals(SERVER_ERROR)){
+                Toast.makeText(MainActivity.this, R.string.server_error, Toast.LENGTH_SHORT).show();
             }
         }
     }
