@@ -23,6 +23,7 @@
                 android:layout_height="50dp"
                 android:layout_gravity="center"
                 android:layout_marginTop="16dp"
+                android:contentDescription="@string/smiley_face"
                 app:srcCompat="@drawable/smiley_face" />
 
             <TextView

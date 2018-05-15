@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Joke Activity</string>
     <string name="placeholder">This is the place where jokes are displayed.</string>
+    <string name="smiley_face">Smiley face</string>
 </resources>
