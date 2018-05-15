@@ -21,7 +21,6 @@ import java.io.IOException;
 public class MainActivity extends AppCompatActivity {
 
     public static final String JOKE_FROM_SERVER = "joke_from_server" ;
-    public static final String SERVER_ERROR = "Failed to connect to /10.0.2.2:8080";
     public static final String EMULATOR_LOCALHOST = "http://10.0.2.2:8080/_ah/api/";
     private ProgressBar jokeProgressBar;
 
@@ -73,13 +72,10 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(String s) {
             jokeProgressBar.setVisibility(View.GONE);
 
-            if ( s != null && !s.equals(SERVER_ERROR)){
+            if ( s != null){
                 Intent intent = new Intent(MainActivity.this, JokeActivity.class);
                 intent.putExtra(JOKE_FROM_SERVER, s);
                 startActivity(intent);
-            }
-            if (s.equals(SERVER_ERROR)){
-                Toast.makeText(MainActivity.this, R.string.server_error, Toast.LENGTH_SHORT).show();
             }
         }
     }
